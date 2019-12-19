@@ -6,17 +6,24 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.SimpleTimeZone;
 
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.TransactionDAO;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.exception.InvalidAccountException;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Account;
 import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.ExpenseType;
+import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
-public class MyDBHandler extends SQLiteOpenHelper {
+public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
     //information of database
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "JavaProject.db";
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat();
 
     public MyDBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,7 +40,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     public static final String TABLE_NAME_TRANSACTION = "Transaction_Table";
     public static final String COLUMN_accountNo_Transaction = "accountNo";
-    public static final String COLUMN_type= "type";
+    public static final String COLUMN_type= "types";
     public static final String COLUMN_amount = "amount";
     public static final String COLUMN_date = "date";
     //initialize the database for transaction
@@ -72,8 +79,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
         contentValues.put(COLUMN_accountHolderName, account.getAccountHolderName());
         contentValues.put(COLUMN_balance,account.getBalance());
 
+
         //add account to database
         db.insert(TABLE_NAME_ACCOUNT,null,contentValues);
+        System.out.println("data added");
     }
 
     public Account getAccount(String accountNo) throws InvalidAccountException {
@@ -97,7 +106,6 @@ public class MyDBHandler extends SQLiteOpenHelper {
         //if not a account return exception
         String msg = "Account " + accountNo + " is invalid.";
         throw new InvalidAccountException(msg);
-
 
 
     }
@@ -171,7 +179,28 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
 
 
+    @Override
+    public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        //initialize and add to table
+        contentValues.put(COLUMN_accountNo_Transaction,accountNo);
+        contentValues.put(COLUMN_type, String.valueOf(expenseType));
+        contentValues.put(COLUMN_amount, Double.valueOf(amount));
+        contentValues.put(COLUMN_date, dateFormat.format(date));
 
+        db.insert(TABLE_NAME_TRANSACTION,null,contentValues);
+    }
+
+    @Override
+    public List<Transaction> getAllTransactionLogs() {
+        return null;
+    }
+
+    @Override
+    public List<Transaction> getPaginatedTransactionLogs(int limit) {
+        return null;
+    }
 
 
 
