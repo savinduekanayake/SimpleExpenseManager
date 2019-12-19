@@ -18,6 +18,10 @@ public class MyDBHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "JavaProject.db";
 
+    public MyDBHandler(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
 
     public static final String TABLE_NAME_ACCOUNT = "Account_Table";
     public static final String COLUMN_accountNo = "accountNo";
@@ -34,9 +38,7 @@ public class MyDBHandler extends SQLiteOpenHelper {
     public static final String COLUMN_date = "date";
     //initialize the database for transaction
 
-    public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, DATABASE_NAME, factory, DATABASE_VERSION);
-    }
+
 
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE_ACCOUNT = "CREATE TABLE " + TABLE_NAME_ACCOUNT + "(" + COLUMN_accountNo +
