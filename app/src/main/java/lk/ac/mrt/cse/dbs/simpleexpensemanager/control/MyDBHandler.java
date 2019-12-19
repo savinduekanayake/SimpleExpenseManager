@@ -50,12 +50,12 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
 
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE_ACCOUNT = "CREATE TABLE " + TABLE_NAME_ACCOUNT + "(" + COLUMN_accountNo +
-                "TEXT PRIMARYKEY," + COLUMN_bankName + "TEXT," + COLUMN_accountHolderName + "TEXT," + COLUMN_balance + "FLOAT )";
+                "TEXT PRIMARYKEY," + COLUMN_bankName + " TEXT," + COLUMN_accountHolderName + " TEXT," + COLUMN_balance + " FLOAT )";
         db.execSQL(CREATE_TABLE_ACCOUNT);
         //run the string of create_table_account
 
         String CREATE_TABLE_TRANSACTION = "CREATE TABLE " + TABLE_NAME_TRANSACTION + "(" + COLUMN_accountNo_Transaction +
-                "TEXT PRIMARYKEY," + COLUMN_type + "TEXT," + COLUMN_amount + "FLOAT," + COLUMN_date + "DATE )";
+                "TEXT PRIMARYKEY," + COLUMN_type + " TEXT," + COLUMN_amount + " FLOAT," + COLUMN_date + " DATE )";
         db.execSQL(CREATE_TABLE_TRANSACTION);
         //run the string of create_table_Transaction
     }
@@ -276,10 +276,5 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
         return arrayList_transaction;
 
     }
-
-
-
-
-
 
 }
