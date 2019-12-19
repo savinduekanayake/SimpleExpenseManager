@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -194,7 +195,43 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
 
     @Override
     public List<Transaction> getAllTransactionLogs() {
-        return null;
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //initialize array list
+        ArrayList<Transaction> arrayList_transaction = new ArrayList();
+        Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_TRANSACTION , null );
+        res.moveToFirst();
+
+        while (res.isAfterLast()== false){
+            //get data from table and set to variables
+            String accountNo = res.getString(0);
+            String type = res.getString(1);
+            Double amount = res.getDouble(2);
+
+            try {
+                Date date_ = new SimpleDateFormat("dd/mm/yyyy").parse(res.getString(3));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            String expenseTypeStr = res.getString(1);
+            ExpenseType expenseType = ExpenseType.EXPENSE;
+
+            //if expense type is not expese
+            if(res.getString(res.getColumnIndex("expenseType"))== "Expense"){
+                expenseType=ExpenseType.INCOME;
+            }
+
+            try {
+                //add to arrayList
+                Transaction t = new Transaction(dateFormat.parse(res.getString(3)),accountNo,expenseType,amount);
+                arrayList_transaction.add(t);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return arrayList_transaction;
     }
 
     @Override
