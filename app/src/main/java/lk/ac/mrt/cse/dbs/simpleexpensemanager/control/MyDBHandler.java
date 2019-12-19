@@ -21,10 +21,10 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
 public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
     //information of database
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "JavaProject.db";
 
-    private SimpleDateFormat dateFormat = new SimpleDateFormat();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
 
     public MyDBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -50,12 +50,12 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
 
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TABLE_ACCOUNT = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_ACCOUNT + "(" + COLUMN_accountNo +
-                "TEXT PRIMARY KEY," + COLUMN_bankName + " TEXT, " + COLUMN_accountHolderName + " TEXT," + COLUMN_balance + " REAL )";
+                " TEXT PRIMARY KEY," + COLUMN_bankName + " TEXT, " + COLUMN_accountHolderName + " TEXT," + COLUMN_balance + " REAL )";
         db.execSQL(CREATE_TABLE_ACCOUNT);
         //run the string of create_table_account
 
         String CREATE_TABLE_TRANSACTION = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TRANSACTION + "(" + COLUMN_accountNo_Transaction +
-                "TEXT PRIMARY KEY," + COLUMN_type + " TEXT," + COLUMN_amount + " FLOAT," + COLUMN_date + " DATE )";
+                " TEXT PRIMARY KEY, " + COLUMN_type + " TEXT, " + COLUMN_amount + " FLOAT, " + COLUMN_date + " TEXT )";
         db.execSQL(CREATE_TABLE_TRANSACTION);
         //run the string of create_table_Transaction
     }
@@ -89,7 +89,7 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
     public Account getAccount(String accountNo) throws InvalidAccountException {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        Cursor res = db.rawQuery("select * from " + TABLE_NAME_ACCOUNT + " WHERE accountNo =" +accountNo,null);
+        Cursor res = db.rawQuery("select * from " + TABLE_NAME_ACCOUNT + " WHERE accountNo = " +accountNo,null);
 
         //check if there is account exist
         if(res.moveToFirst()){
@@ -127,7 +127,7 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
                 break;
         }
         contentValues.put(COLUMN_balance, account.getBalance());
-        db.update(TABLE_NAME_ACCOUNT, contentValues, "COLUMN_accountNo " + " = ? ", new String[] {account.getAccountNo()});
+        db.update(TABLE_NAME_ACCOUNT, contentValues, COLUMN_accountNo + " = ? ", new String[] {account.getAccountNo()});
 
     }
 
@@ -137,14 +137,13 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
         SQLiteDatabase db = this.getWritableDatabase();
 
         //initialize array list
-        ArrayList accountNumberList = new ArrayList();
+        List<String> accountNumberList = new ArrayList<>();
 
         Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_ACCOUNT , null );
 
-        while(res.isAfterLast()== false){
+        while(res.moveToNext()){
             //putting all account numbers to array list
-            accountNumberList.add(res.getString(res.getColumnIndex("accountNo")));
-            res.moveToNext();
+            accountNumberList.add(res.getString(0));
         }
         return accountNumberList;
     }
@@ -159,16 +158,17 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
         Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_ACCOUNT , null );
 
         //putting all account numbers to array list
-        while(res.isAfterLast()== false){
+        while(res.moveToNext()){
 
             String accountNumber = res.getString(res.getColumnIndex("accountNo"));
             String bankName = res.getString(res.getColumnIndex("bankName"));
             String accountHolderName = res.getString(res.getColumnIndex("accountHolderName"));
             Double balance = res.getDouble(res.getColumnIndex("balance"));
-            res.moveToNext();
+
 
             accountList.add(new Account(accountNumber,bankName,accountHolderName,balance));
         }
+        System.out.println("a******************");
         return accountList;
     }
 
@@ -202,14 +202,14 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
         Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_TRANSACTION , null );
         res.moveToFirst();
 
-        while (res.isAfterLast()== false){
+        while (res.moveToNext()){
             //get data from table and set to variables
             String accountNo = res.getString(0);
             String type = res.getString(1);
             Double amount = res.getDouble(2);
 
             try {
-                Date date_ = new SimpleDateFormat("dd/mm/yyyy").parse(res.getString(3));
+                Date date_ = new SimpleDateFormat("dd/MM/YYYY").parse(res.getString(3));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -244,7 +244,7 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
         Cursor res = db.rawQuery("SELECT * FROM "+ TABLE_NAME_TRANSACTION  + " order by "+ COLUMN_date+ " DESC limit "+ limit ,null );
         res.moveToFirst();
 
-        while (res.isAfterLast()== false){
+        while (res.moveToNext()){
             //get data from table and set to variables
             String accountNo = res.getString(0);
             String type = res.getString(1);

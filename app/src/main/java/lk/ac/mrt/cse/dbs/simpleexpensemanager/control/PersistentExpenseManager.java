@@ -31,11 +31,11 @@ public class PersistentExpenseManager extends ExpenseManager {
         TransactionDAO inMemoryTransactionDAO = new persistentTransactionDAO(dbHandler);
         setTransactionsDAO(inMemoryTransactionDAO);
 
-        Account dymmyAcc1 = new Account("123","A bank", "SK", 100.0);
-        Account dymmyAcc2 = new Account("32","B bank", "SKE", 120.0);
+//        Account dymmyAcc1 = new Account("123","A bank", "SK", 100.0);
+//        Account dymmyAcc2 = new Account("32","B bank", "SKE", 120.0);
 
-        getAccountsDAO().addAccount(dymmyAcc1);
-        getAccountsDAO().addAccount(dymmyAcc2);
+//        getAccountsDAO().addAccount(dymmyAcc1);
+//        getAccountsDAO().addAccount(dymmyAcc2);
 
     }
 }
