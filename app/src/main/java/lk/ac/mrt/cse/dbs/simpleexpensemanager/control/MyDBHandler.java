@@ -21,8 +21,8 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
 public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
     //information of database
-    private static final int DATABASE_VERSION = 5;
-    private static final String DATABASE_NAME = "JavaProject.db";
+    private static final int DATABASE_VERSION = 8;
+    private static final String DATABASE_NAME = "170158F";
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
 
@@ -37,6 +37,7 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
     public static final String COLUMN_accountHolderName = "accountHolderName";
     public static final String COLUMN_balance = "balance";
     //initialize the database for account
+
 
 
     public static final String TABLE_NAME_TRANSACTION = "Transaction_Table";
@@ -54,8 +55,8 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
         db.execSQL(CREATE_TABLE_ACCOUNT);
         //run the string of create_table_account
 
-        String CREATE_TABLE_TRANSACTION = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TRANSACTION + "(" + COLUMN_accountNo_Transaction +
-                " TEXT PRIMARY KEY, " + COLUMN_type + " TEXT, " + COLUMN_amount + " FLOAT, " + COLUMN_date + " TEXT )";
+        String CREATE_TABLE_TRANSACTION = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TRANSACTION + "( ID INTEGER PRIMARY KEY AUTOINCREMENT, " + COLUMN_accountNo_Transaction +
+                " TEXT , " + COLUMN_type + " TEXT, " + COLUMN_amount + " FLOAT, " + COLUMN_date + " TEXT )";
         db.execSQL(CREATE_TABLE_TRANSACTION);
         //run the string of create_table_Transaction
     }
