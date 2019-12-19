@@ -49,13 +49,13 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
 
 
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_TABLE_ACCOUNT = "CREATE TABLE " + TABLE_NAME_ACCOUNT + "(" + COLUMN_accountNo +
-                "TEXT PRIMARYKEY," + COLUMN_bankName + " TEXT," + COLUMN_accountHolderName + " TEXT," + COLUMN_balance + " FLOAT )";
+        String CREATE_TABLE_ACCOUNT = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_ACCOUNT + "(" + COLUMN_accountNo +
+                "TEXT PRIMARY KEY," + COLUMN_bankName + " TEXT, " + COLUMN_accountHolderName + " TEXT," + COLUMN_balance + " REAL )";
         db.execSQL(CREATE_TABLE_ACCOUNT);
         //run the string of create_table_account
 
-        String CREATE_TABLE_TRANSACTION = "CREATE TABLE " + TABLE_NAME_TRANSACTION + "(" + COLUMN_accountNo_Transaction +
-                "TEXT PRIMARYKEY," + COLUMN_type + " TEXT," + COLUMN_amount + " FLOAT," + COLUMN_date + " DATE )";
+        String CREATE_TABLE_TRANSACTION = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TRANSACTION + "(" + COLUMN_accountNo_Transaction +
+                "TEXT PRIMARY KEY," + COLUMN_type + " TEXT," + COLUMN_amount + " FLOAT," + COLUMN_date + " DATE )";
         db.execSQL(CREATE_TABLE_TRANSACTION);
         //run the string of create_table_Transaction
     }
@@ -83,7 +83,7 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
 
         //add account to database
         db.insert(TABLE_NAME_ACCOUNT,null,contentValues);
-        System.out.println("data added");
+       // System.out.println("data added");
     }
 
     public Account getAccount(String accountNo) throws InvalidAccountException {
