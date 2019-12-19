@@ -21,7 +21,7 @@ import lk.ac.mrt.cse.dbs.simpleexpensemanager.data.model.Transaction;
 
 public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
     //information of database
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "JavaProject.db";
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
@@ -184,6 +184,7 @@ public class MyDBHandler extends SQLiteOpenHelper implements TransactionDAO {
     public void logTransaction(Date date, String accountNo, ExpenseType expenseType, double amount) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+
         //initialize and add to table
         contentValues.put(COLUMN_accountNo_Transaction,accountNo);
         contentValues.put(COLUMN_type, String.valueOf(expenseType));
